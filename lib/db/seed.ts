@@ -11,6 +11,20 @@ import {clinics, followUps, staff, staffAccounts} from './schema';
 const CLINIC_ID = '00000000-0000-4000-8000-000000000001';
 const RECEPTIONIST_ID = '00000000-0000-4000-8000-000000000002';
 const DOCTOR_ID = '00000000-0000-4000-8000-000000000003';
+const DEMO_ID = '00000000-0000-4000-8000-000000000004';
+
+/**
+ * A public demo login, printed in the README so anyone can try the staff
+ * side. The password is deliberately not a secret, which is safe only
+ * because the seed never runs in production (see main) and the data is made up.
+ */
+const DEMO_STAFF = {
+  id: DEMO_ID,
+  role: 'reception' as const,
+  name: 'Demo Staff',
+  email: 'demo@aftervisit.example',
+  password: 'AfterVisit-Demo-2026',
+};
 
 const SEED_STAFF = [
   {
@@ -157,6 +171,15 @@ async function main() {
       })),
     );
 
+    const {password: demoPassword, ...demo} = DEMO_STAFF;
+    await tx.insert(staff).values({...demo, clinicId: CLINIC_ID});
+    await tx.insert(staffAccounts).values({
+      userId: demo.id,
+      providerId: 'credential',
+      accountId: demo.id,
+      password: await hashPassword(demoPassword),
+    });
+
     await tx.insert(followUps).values(
       SEED_FOLLOW_UPS.map((followUp, index) => {
         const startsAt = new Date(now - followUp.startedAgo);
@@ -199,6 +222,7 @@ async function main() {
   SEED_STAFF.forEach(member => {
     console.log(`  ${member.email}  ${member.role}`);
   });
+  console.log(`\nDemo sign-in (public, from the README):\n  ${DEMO_STAFF.email}  ${DEMO_STAFF.password}`);
   console.log('\nPatient links (last 4 digits of the phone):');
   SEED_FOLLOW_UPS.forEach((followUp, index) => {
     console.log(
