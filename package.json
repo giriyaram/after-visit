@@ -1,0 +1,47 @@
+{
+  "name": "aftervisit",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx --env-file=.env.local lib/db/seed.ts",
+    "staff:create": "tsx --env-file=.env.local lib/db/create-staff.ts",
+    "test": "tsx --env-file=.env.local --test \"lib/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@astryxdesign/cli": "^0.7.14",
+    "@astryxdesign/core": "^0.7.14",
+    "@astryxdesign/theme-neutral": "^0.7.14",
+    "@nexconn/chat": "^26.2.1",
+    "@nexconn/chatui": "^26.2.5",
+    "@nexconn/engine": "^26.2.1",
+    "@stylexjs/stylex": "^0.19.2",
+    "better-auth": "^1.7.22",
+    "drizzle-orm": "^0.45.4",
+    "lucide-react": "^1.72.0",
+    "next": "16.4.6",
+    "pg": "^8.23.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@stylexjs/babel-plugin": "^0.19.2",
+    "@stylexjs/postcss-plugin": "^0.19.2",
+    "@types/node": "^20",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.6.2",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}

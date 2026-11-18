@@ -1,0 +1,7 @@
+@import "@astryxdesign/core/reset.css";
+@import "@astryxdesign/core/astryx.css";
+
+/* The theme and font CSS are imported by the generated astryx-themes module.
+   StyleX app styles are injected here. The PostCSS plugin declares the layer
+   order: reset < astryx-base < astryx-theme < stylex app layers. */
+@stylex;
