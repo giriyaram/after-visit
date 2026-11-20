@@ -18,6 +18,8 @@ Once the visit is over, the clinic opens a follow-up and sends the patient a pri
 | **Email** | `demo@aftervisit.example` |
 | **Password** | `AfterVisit-Demo-2026` |
 
+**Live app:** [after-visit-flax.vercel.app](https://after-visit-flax.vercel.app/) (sign in at [/sign-in](https://after-visit-flax.vercel.app/sign-in))
+
 This account is shared on purpose and can see only made-up sample data. Running `npm run db:seed` creates it in any development database (see [Run it locally](#run-it-locally)).
 
 ### Demo patient links
