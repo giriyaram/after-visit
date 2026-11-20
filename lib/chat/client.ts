@@ -254,8 +254,16 @@ async function loadSummaries(): Promise<Record<string, ChannelSummary> | undefin
  * Connects the signed-in staff member for the inbox and keeps a summary of
  * every conversation they are in: unread count and latest message. The
  * list is reloaded when a message arrives, so counts stay current.
+ *
+ * Pass Chat UI's `beforeConnect` here too: the connection outlives the page,
+ * so a conversation opened from the inbox reuses it, and Chat UI created
+ * after the connect never sees the sync finish and cannot open a channel.
  */
-export function useStaffUnread(sessionPath: string): StaffUnreadState {
+export function useStaffUnread(sessionPath: string, options: SessionOptions = {}): StaffUnreadState {
+  const beforeConnectRef = useRef(options.beforeConnect);
+  useEffect(() => {
+    beforeConnectRef.current = options.beforeConnect;
+  }, [options.beforeConnect]);
   const handlerId = useId();
   const [connection, setConnection] = useState<ChatConnection>('connecting');
   const [summaries, setSummaries] = useState<Record<string, ChannelSummary>>({});
@@ -298,6 +306,7 @@ export function useStaffUnread(sessionPath: string): StaffUnreadState {
       let response: InboxSessionResponse | 'network';
       try {
         initializeEngine();
+        beforeConnectRef.current?.();
         const raw = await fetch(sessionPath, {method: 'POST', cache: 'no-store'});
         response = (await raw.json()) as InboxSessionResponse;
       } catch {
