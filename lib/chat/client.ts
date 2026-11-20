@@ -124,8 +124,9 @@ type SessionOptions = {
   /**
    * Runs after the SDK is initialized and before it connects. Chat UI must
    * be created here, since it only learns the connection state from events.
+   * `useStaffUnread` awaits it, so the inbox can import Chat UI on demand.
    */
-  beforeConnect?: () => void;
+  beforeConnect?: () => unknown;
 };
 
 /**
@@ -306,7 +307,7 @@ export function useStaffUnread(sessionPath: string, options: SessionOptions = {}
       let response: InboxSessionResponse | 'network';
       try {
         initializeEngine();
-        beforeConnectRef.current?.();
+        await beforeConnectRef.current?.();
         const raw = await fetch(sessionPath, {method: 'POST', cache: 'no-store'});
         response = (await raw.json()) as InboxSessionResponse;
       } catch {

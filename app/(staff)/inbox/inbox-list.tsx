@@ -16,7 +16,6 @@ import {Skeleton} from '@astryxdesign/core/Skeleton';
 import {Text} from '@astryxdesign/core/Text';
 import {Token} from '@astryxdesign/core/Token';
 import {VStack} from '@astryxdesign/core/VStack';
-import {prepareChatUi} from '@/components/nexconn-chat-ui';
 import {channelIdFor, isPatientChatId} from '@/lib/chat/ids';
 import {useStaffUnread, type ChannelSummary} from '@/lib/chat/client';
 import {daysRemainingLabel, type FollowUpView} from '@/lib/follow-up-view';
@@ -39,6 +38,17 @@ export function NewFollowUpButton() {
       icon={<Icon icon={MessageSquarePlus} />}
     />
   );
+}
+
+/**
+ * Creates Chat UI before the inbox connects, so a conversation opened from
+ * here can reuse the connection. Imported on demand: Chat UI defines Web
+ * Components when it loads, which fails on the server where /inbox is
+ * prerendered.
+ */
+async function prepareChatUiInBrowser() {
+  const {prepareChatUi} = await import('@/components/nexconn-chat-ui');
+  prepareChatUi();
 }
 
 function previewLine(summary: ChannelSummary | undefined) {
@@ -94,9 +104,7 @@ function SummaryTile({label, value, icon, unavailableText}: TileProps) {
 // from Nexconn once the staff member's chat identity connects. Until then the
 // rows show in time-remaining order with a placeholder where the count goes.
 export function InboxList({followUps, isFilteredToFlagged}: Props) {
-  // Chat UI is created before the inbox connects, so opening a conversation
-  // from here can reuse the connection.
-  const unread = useStaffUnread('/inbox/chat-session', {beforeConnect: prepareChatUi});
+  const unread = useStaffUnread('/inbox/chat-session', {beforeConnect: prepareChatUiInBrowser});
   const isUnreadUnavailable =
     unread.connection === 'offline' || unread.connection === 'unavailable';
 
